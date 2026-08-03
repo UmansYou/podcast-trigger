@@ -1,0 +1,17 @@
+name: trigger-podcast-digest
+on:
+  schedule:
+    - cron: '0 3 * * *'   # UTC 03:00 = 北京时间 11:00
+  workflow_dispatch:
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger podcast-digest workflow
+        run: |
+          curl -s -X POST \
+            -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/UmansYou/podcast-digest/actions/workflows/daily.yml/dispatches" \
+            -d '{"ref":"main"}'
+          echo "Triggered podcast-digest workflow_dispatch at $(date -u)"
